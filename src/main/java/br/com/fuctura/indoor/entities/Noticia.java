@@ -4,15 +4,22 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.com.fuctura.indoor.dtos.NoticiaDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "noticias")
 public class Noticia {
@@ -35,5 +42,18 @@ public class Noticia {
 	public NoticiaDto toDto() {
 		return new NoticiaDto(this);
 	}
+	
+	public Noticia(String titulo, String descricao, LocalDateTime ini, 
+			LocalDateTime fim, int duracao) {
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.inicio = ini;
+		this.fim = fim;
+		this.duracao = duracao;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="not_sit_id")
+	private Situacao situacao;
 	
 }
