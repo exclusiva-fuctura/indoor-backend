@@ -51,7 +51,17 @@ public class Noticia {
 		this.fim = fim;
 		this.duracao = duracao;
 	}
-	
+
+	public Noticia(String titulo, String descricao, LocalDateTime ini, 
+			LocalDateTime fim, int duracao, Situacao situacao) {
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.inicio = ini;
+		this.fim = fim;
+		this.duracao = duracao;
+		this.situacao = situacao;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="not_sit_id")
 	private Situacao situacao;

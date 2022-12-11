@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import br.com.fuctura.indoor.aux.GenerateData;
 import br.com.fuctura.indoor.entities.Noticia;
 import br.com.fuctura.indoor.entities.Situacao;
 
@@ -185,31 +186,12 @@ public class NoticiaRepositoryTest {
 		}
 	}
 	
-
 	
 	private Situacao createSituacao(String descricao) {
-		Situacao s1 = new Situacao();
-		s1.setDescricao(descricao);
-		
-		// checa se existe
-		List<Situacao> situacoes = this.situacaoRepository.findByDescricao(descricao);
-		if (situacoes.isEmpty()) {
-			this.situacaoRepository.save(s1);			
-		} else {
-			s1 = situacoes.get(0);
-		}
-		
-		return s1;
+		return GenerateData.createSituacao(descricao, this.situacaoRepository);
 	}
 	
 	private void createNoticia(String descricao, Situacao situacao) {
-		LocalDateTime fim = LocalDateTime.now().plusMinutes(60);		
-		Noticia noticia = new Noticia("Titulo " + descricao, descricao, LocalDateTime.now(), fim, 20);		
-		noticia.setSituacao(situacao);		
-		
-		List<Noticia> noticias = this.noticiaRepository.findBySituacao(situacao);
-		if (noticias.isEmpty()) {
-			this.noticiaRepository.save(noticia);			
-		}
+		GenerateData.createNoticia(descricao, situacao, this.noticiaRepository); 
 	}
 }

@@ -27,4 +27,8 @@ public class Situacao {
 	public SituacaoDto toDto() {
 		return new SituacaoDto(this);
 	}
+	
+	public Situacao(String descricao) {
+		this.descricao = descricao;
+	}
 }

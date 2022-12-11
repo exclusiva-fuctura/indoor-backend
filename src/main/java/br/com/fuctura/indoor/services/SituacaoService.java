@@ -1,5 +1,6 @@
 package br.com.fuctura.indoor.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,15 @@ public class SituacaoService {
 	 */
 	public Optional<Situacao> findById(Long id) {
 		return this.situacaoRepository.findById(id);
+	}
+	
+	/**
+	 * Recupera uma lista de situações baseado na descricao
+	 * @param descricao
+	 * @return Lista de situações
+	 */
+	public List<Situacao> findByDescricao(String descricao) {
+		return this.situacaoRepository.findByDescricao(descricao);
 	}
 	
 	/**
@@ -65,5 +75,13 @@ public class SituacaoService {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Retorna lista de situacoes cadastradas
+	 * @return lista de situações
+	 */
+	public List<Situacao> findAll() {
+		return this.situacaoRepository.findAll();		
 	}
 }

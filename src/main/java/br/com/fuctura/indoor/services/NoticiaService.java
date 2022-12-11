@@ -1,5 +1,6 @@
 package br.com.fuctura.indoor.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ public class NoticiaService {
 	@Autowired
 	private NoticiaRepository noticiaRepository;
 	
-	@Autowired
-	private SituacaoService situacaoService;
 	
 	/***
 	 * Recupera uma noticia existente 
@@ -53,5 +52,23 @@ public class NoticiaService {
 		if(obj.isPresent()) {
 			this.noticiaRepository.delete(obj.get());			
 		}
+	}
+
+	/**
+	 * Lista de noticias filtrado pela descricao
+	 * @param string
+	 * @return
+	 */
+	public List<Noticia> findByDescricao(String string) {
+		return this.noticiaRepository.findByDescricao(string);
+	}
+	
+	/**
+	 * Verifica se existe alguma noticia com a descricao passada
+	 * @param descricao
+	 * @return verdadeiro ou falso
+	 */
+	public boolean isExists(String descricao) {
+		return !this.findByDescricao(descricao).isEmpty();
 	}
 }
