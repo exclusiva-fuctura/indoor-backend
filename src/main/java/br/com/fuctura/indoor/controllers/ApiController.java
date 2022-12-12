@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.fuctura.indoor.dtos.MensagemDto;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @RestController
 @RequestMapping("/")
 public class ApiController {
@@ -27,5 +30,10 @@ public class ApiController {
 		dto.setPath("/api/");
 		
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	}
+		
+	@GetMapping(value="/doc")
+	public RedirectView redirectWagger() {		
+		return new RedirectView("/api/swagger-ui.html");	
 	}
 }

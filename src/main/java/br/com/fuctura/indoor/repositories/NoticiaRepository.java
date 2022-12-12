@@ -30,5 +30,7 @@ public interface NoticiaRepository extends JpaRepository<Noticia, Long>{
 	public List<Noticia> findByInicioGreaterThanEqualAndFimLessThanEqual(LocalDateTime inicio,
 	LocalDateTime fim);
 	
-	List<Noticia> findByDescricao(String descricao);
+	public List<Noticia> findByDescricao(String descricao);
+
+	public List<Noticia> findByTitulo(String string);
 }

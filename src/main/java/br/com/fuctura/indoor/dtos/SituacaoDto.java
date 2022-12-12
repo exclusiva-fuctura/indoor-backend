@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SituacaoDto {
 	
-	private long id;	
+	private Long id;	
 	private String descricao;
 	
 	public SituacaoDto(Situacao situacao) {
