@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.fuctura.indoor.entities.Situacao;
 import br.com.fuctura.indoor.exceptions.FoundChildException;
+import br.com.fuctura.indoor.exceptions.RequiredParamException;
+import br.com.fuctura.indoor.exceptions.SituacaoEmptyException;
 import br.com.fuctura.indoor.exceptions.SituacaoExistsException;
 import br.com.fuctura.indoor.repositories.SituacaoRepository;
 
@@ -120,5 +122,21 @@ public class SituacaoService {
 	public boolean isExists(Situacao situacao) {
 		List<Situacao> situacoes = this.findByDescricao(situacao.getDescricao());
 		return !situacoes.isEmpty();
+	}
+	
+	/**
+	 * Verifica a situacao pelo id informado
+	 * @param id
+	 * @throws SituacaoEmptyException
+	 * @throws RequiredParamException
+	 */
+	public void checkSituacao(Long id) throws SituacaoEmptyException, RequiredParamException {
+		if (null == id) {
+			throw new RequiredParamException("A situacao precisa ser informada");
+		}
+		Optional<Situacao> situacao = this.findById(id);
+		if (situacao.isEmpty()) {
+			throw new SituacaoEmptyException("Situacao não encontrada");
+		}
 	}
 }

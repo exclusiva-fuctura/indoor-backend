@@ -26,7 +26,7 @@ import br.com.fuctura.indoor.repositories.NoticiaRepository;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class SituacaoServiceTest {
+class SituacaoServiceTest {
 
 	@Autowired
 	private SituacaoService situacaoService;
@@ -57,35 +57,35 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do findById - Sucesso")
-	public void testFindById_ok() {
+	void testFindById_ok() {
 		Optional<Situacao> situacao = this.situacaoService.findById(1L);
 		assertTrue(situacao.isPresent());
 	}
 	
 	@Test
 	@DisplayName("Teste do findById - Falha")
-	public void testFindById_fail() {
+	void testFindById_fail() {
 		Optional<Situacao> situacao = this.situacaoService.findById(9L);
 		assertTrue(situacao.isEmpty());
 	}
 	
 	@Test
 	@DisplayName("Teste do findByDescricao - Sucesso")
-	public void testFindByDescricao_ok() {
+	void testFindByDescricao_ok() {
 		List<Situacao> situacoes = this.situacaoService.findByDescricao("Situacao 01");
 		assertTrue(!situacoes.isEmpty());
 	}
 	
 	@Test
 	@DisplayName("Teste do findByDescricao - Falha")
-	public void testFindByDescricao_fail() {
+	void testFindByDescricao_fail() {
 		List<Situacao> situacoes = this.situacaoService.findByDescricao("Situacao 0");
 		assertTrue(situacoes.isEmpty());
 	}
 	
 	@Test
 	@DisplayName("Teste do insert - Sucesso")
-	public void testInsert_ok() {
+	void testInsert_ok() {
 		Situacao situacao = new Situacao("Situacao 03");
 		try {
 			this.situacaoService.insert(situacao);
@@ -97,7 +97,7 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do insert - Falha")
-	public void testInsert_fail() {
+	void testInsert_fail() {
 		Situacao situacao = new Situacao("Situacao 01");
 		try {
 			this.situacaoService.insert(situacao);
@@ -109,7 +109,7 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do update - Sucesso")
-	public void testUpdate_ok() {
+	void testUpdate_ok() {
 		List<Situacao> situacoes = this.situacaoService.findByDescricao("Situacao 01");		
 		assertTrue(!situacoes.isEmpty());
 		Situacao situacao = situacoes.get(0);
@@ -125,7 +125,7 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do update - Falha")
-	public void testUpdate_fail() {
+	void testUpdate_fail() {
 		Optional<Situacao> situacao = this.situacaoService.findById(1L);		
 		assertTrue(situacao.isPresent());
 		try {
@@ -138,7 +138,7 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do delete - Sucesso")
-	public void testDelete_ok() {
+	void testDelete_ok() {
 		List<Situacao> situacoes = this.situacaoService.findByDescricao("Situacao 02");
 		assertTrue(!situacoes.isEmpty());
 		try {
@@ -150,7 +150,7 @@ public class SituacaoServiceTest {
 	
 	@Test
 	@DisplayName("Teste do delete - Falha")
-	public void testDelete_fail() {
+	void testDelete_fail() {
 		Optional<Situacao> situacao = this.situacaoService.findById(1L);
 		assertTrue(situacao.isPresent());
 		try {
@@ -163,14 +163,14 @@ public class SituacaoServiceTest {
 		
 	@Test
 	@DisplayName("Teste do isExists - Sucesso")
-	public void testIsExists_ok() {
+	void testIsExists_ok() {
 		boolean situacaoExists = this.situacaoService.isExists(new Situacao("Situacao 02"));
 		assertTrue(situacaoExists);
 	}
 	
 	@Test
 	@DisplayName("Teste do isExists - Falha")
-	public void testIsExists_fail() {
+	void testIsExists_fail() {
 		boolean situacaoExists = this.situacaoService.isExists(new Situacao("Situacao 09"));
 		assertFalse(situacaoExists);		
 	}

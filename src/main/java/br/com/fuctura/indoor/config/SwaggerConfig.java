@@ -24,6 +24,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Value("${application-version}")
     public static String API_VERSION;
     public static final String API_SITUACAO = "situacao";
+    public static final String API_NOTICIA = "noticia";
 
     @Bean
     public Docket api() {
@@ -35,7 +36,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false)
-                .tags(new Tag(API_SITUACAO, "Api de serviços da situação")
+                .tags(new Tag(API_SITUACAO, "Api de serviços da situação"),
+                      new Tag(API_NOTICIA, "Api de serviços da noticia")        		
                 );
     }
 

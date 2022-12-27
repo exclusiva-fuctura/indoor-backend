@@ -1,7 +1,5 @@
 package br.com.fuctura.indoor.dtos;
 
-import java.time.LocalDateTime;
-
 import br.com.fuctura.indoor.entities.Noticia;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +13,22 @@ public class NoticiaDto {
 	private long numero;
 	private String titulo;
 	private String descricao;
-	private LocalDateTime inicio;
-	private LocalDateTime fim;
-	private int duracao_segundos;
+	private String inicio;
+	private String fim;
+	private int duracaoSegundos;
+	private long situacao;
 	
 	public NoticiaDto(Noticia noticia) {
 		if (null != noticia) {			
 			this.numero = noticia.getId();
 			this.titulo = noticia.getTitulo();
 			this.descricao = noticia.getDescricao();
-			this.inicio = noticia.getInicio();
-			this.fim = noticia.getFim();
-			this.duracao_segundos = noticia.getDuracao();
+			this.inicio = noticia.getInicio() != null ? noticia.getInicio().toString() : null;
+			this.fim = noticia.getFim() != null ? noticia.getFim().toString() : null;
+			this.duracaoSegundos = noticia.getDuracao();
+		}
+		if (null != noticia.getSituacao()) {
+			this.situacao = noticia.getSituacao().getId();
 		}
 	}
 }

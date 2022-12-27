@@ -28,7 +28,7 @@ import br.com.fuctura.indoor.entities.Situacao;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class NoticiaRepositoryTest {
+class NoticiaRepositoryTest {
 
 	@Autowired
 	private NoticiaRepository noticiaRepository;
@@ -47,7 +47,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(1)
     @DisplayName("Testar o findBySituação - Sucesso")
-	public void testFindBySituacao_ok() {
+	void testFindBySituacao_ok() {
 		Optional<Situacao> situacao = this.situacaoRepository.findById(1L);
 		if (situacao.isPresent()) {
 			List<Noticia> lista = this.noticiaRepository.findBySituacao(situacao.get());
@@ -61,7 +61,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(2)
     @DisplayName("Testar o findBySituação - Falha")	
-	public void testFindBySituacao_fail() {
+	void testFindBySituacao_fail() {
 		Optional<Situacao> situacao = this.situacaoRepository.findById(1L);
 		if (situacao.isPresent()) {
 			// alterar o id da situacao
@@ -78,7 +78,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(3)
     @DisplayName("Testar a findSituacaoId - Sucesso")
-	public void testFindSituacaoId_ok() {
+	void testFindSituacaoId_ok() {
 		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(1L);
 		assertTrue(!noticias.isEmpty());
 	}
@@ -86,7 +86,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(4)
     @DisplayName("Testar a findSituacaoId - Falha")
-	public void testFindSituacaoId_fail() {
+	void testFindSituacaoId_fail() {
 		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(2L);
 		assertTrue(noticias.isEmpty());
 	}
@@ -94,7 +94,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(5)
     @DisplayName("Testar a findDisponiveis com data inicial e final - Sucesso")
-	public void testFindDisponiveisWithDataInicialAndDataFinal_ok() {
+	void testFindDisponiveisWithDataInicialAndDataFinal_ok() {
 		// criar noticia 2
 		this.createNoticia("Noticia 2", this.createSituacao("Situacao 2"));
 		
@@ -110,7 +110,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(6)
     @DisplayName("Testar a findDisponiveis com data referencia - Sucesso")
-	public void testFindDisponiveisWithDataReferencia_ok() {
+	void testFindDisponiveisWithDataReferencia_ok() {
 		LocalDateTime dataRef = LocalDateTime.now();
 
 		List<Noticia> noticias = this.noticiaRepository
@@ -122,7 +122,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(7)
     @DisplayName("Testar a findDisponiveis com data referencia - Falha")
-	public void testFindDisponiveisWithDataReferencia_fail() {
+	void testFindDisponiveisWithDataReferencia_fail() {
 		// criar data passada
 		LocalDateTime dataRef = LocalDateTime.now().minusDays(1);
 
@@ -135,7 +135,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(8)
     @DisplayName("Testar a findDisponiveis - Falha")
-	public void testFindDisponiveis_fail() {
+	void testFindDisponiveis_fail() {
 		LocalDateTime dataInicial = LocalDateTime.now();
 		LocalDateTime dataFinal = LocalDateTime.now().plusMinutes(60);
 
@@ -148,7 +148,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(9)
     @DisplayName("Testar o findAll - Sucesso")
-	public void testFindAll_ok() {
+	void testFindAll_ok() {
 		List<Noticia> noticias = this.noticiaRepository.findAll();
 		assertTrue(!noticias.isEmpty());		
 	}
@@ -156,7 +156,7 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(10)
     @DisplayName("Testar o Delete - Sucesso")
-	public void testDelete_ok() {
+	void testDelete_ok() {
 		Optional<Noticia> noticia = this.noticiaRepository.findById(1L);
 		if (noticia.isPresent()) {
 			this.noticiaRepository.delete(noticia.get());
@@ -171,13 +171,13 @@ public class NoticiaRepositoryTest {
 	@Test
 	@Order(11)
     @DisplayName("Testar a Atualizacao - Sucesso")
-	public void testUpdate_ok() {
+	void testUpdate_ok() {
 		Optional<Noticia> noticia = this.noticiaRepository.findById(2L);
 		if (noticia.isPresent()) {
 			String descricaoOriginal = noticia.get().getDescricao();
 			// alterar a noticia
 			Noticia noticiaChanged = noticia.get();
-			noticiaChanged.setDescricao("Noticia 01");
+			noticiaChanged.setDescricao("Noticia 3");
 			this.noticiaRepository.save(noticiaChanged);
 						
 			assertNotEquals(descricaoOriginal, noticiaChanged.getDescricao());

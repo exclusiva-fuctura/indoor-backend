@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +20,7 @@ import br.com.fuctura.indoor.entities.Situacao;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class SituacaoRepositoryTest {
+class SituacaoRepositoryTest {
 
 	@Autowired
 	private SituacaoRepository situacaoRepository;
@@ -34,23 +33,24 @@ public class SituacaoRepositoryTest {
 		Situacao s2 = new Situacao();
 		s2.setDescricao("Situacao 2");
 				
-		this.situacaoRepository.save(s1);
-		this.situacaoRepository.save(s2);	
+		// verifica se existe a situacao 1
+		if (this.situacaoRepository.findByDescricao(s1.getDescricao()).isEmpty()) {
+			this.situacaoRepository.save(s1);			
+		}
+		// verifica se existe a situacao 2
+		if (this.situacaoRepository.findByDescricao(s2.getDescricao()).isEmpty()) {
+			this.situacaoRepository.save(s2);			
+		}
 	}
-	
-	@AfterEach
-	public void setDown() {
-		this.situacaoRepository.deleteAll();
-	}
-	
+		
 	@Test
-	public void testFindAll_ok() {
+	void testFindAll_ok() {
 		List<Situacao> lista = this.situacaoRepository.findAll();
 		assertFalse(lista.isEmpty());
 	}
 	
 	@Test
-	public void testFindOne_ok() {
+	void testFindOne_ok() {
 		Situacao situacao = new Situacao();
 		situacao.setDescricao("Situacao 1");
 	
@@ -60,13 +60,13 @@ public class SituacaoRepositoryTest {
 	}
 	
 	@Test
-	public void testFindByDescricao_ok() {	
+	void testFindByDescricao_ok() {	
 		List<Situacao> situacoes = this.situacaoRepository.findByDescricao("Situacao 1");
 		assertTrue(!situacoes.isEmpty());
 	}
 	
 	@Test
-	public void testFindOne_fail() {
+	void testFindOne_fail() {
 		Situacao situacao = new Situacao();
 		situacao.setDescricao("Situacao");
 		

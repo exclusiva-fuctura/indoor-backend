@@ -10,7 +10,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,10 +26,11 @@ import br.com.fuctura.indoor.exceptions.NoticiaExistsException;
 import br.com.fuctura.indoor.exceptions.SituacaoEmptyException;
 import br.com.fuctura.indoor.exceptions.SituacaoExistsException;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class NoticiaServiceTest {
+class NoticiaServiceTest {
 	
 	@Autowired 
 	private NoticiaService noticiaService;
@@ -35,99 +39,118 @@ public class NoticiaServiceTest {
 	private SituacaoService situacaoService;
 	
 	@BeforeEach
-	public void setUp() throws SituacaoExistsException, NoticiaExistsException, SituacaoEmptyException {
-		// noticia 1
-		Situacao situacao = new Situacao("Situacao 01");
+	void setUp() throws SituacaoExistsException, NoticiaExistsException, SituacaoEmptyException {
+		// Situacao 1
+		Situacao situacao = new Situacao("Situacao 1");
 		// verifica se existe a situacao
 		if (!this.situacaoService.isExists(situacao)) {
 			this.situacaoService.insert(situacao);
-			Noticia noticia = new Noticia("Titulo 01", "Noticia 01",
-					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
-			noticia.setSituacao(situacao);
-			// verifica se existe a noticia
-			if (!this.noticiaService.isExists(noticia)) {
-				this.noticiaService.insert(noticia);			
-			}			
+		} else {
+			List<Situacao> sit = this.situacaoService.findByDescricao(situacao.getDescricao());
+			situacao = sit.get(0);
 		}
-		// noticia 2
-		situacao = new Situacao("Situacao 02");
+		// situacao 2
+		Situacao situacao2 = new Situacao("Situacao 2");
 		// verifica se a situacao existe
-		if (!this.situacaoService.isExists(situacao)) {
-			this.situacaoService.insert(situacao);
-			Noticia noticia = new Noticia("Titulo 02", "Noticia 02",
-					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
-			noticia.setSituacao(situacao);
-			// verifica se a noticia existe
-			if (!this.noticiaService.isExists(noticia)) {				
-				this.noticiaService.insert(noticia);			
-			}
+		if (!this.situacaoService.isExists(situacao2)) {
+			this.situacaoService.insert(situacao2);
+		} else {
+			List<Situacao> sit = this.situacaoService.findByDescricao(situacao2.getDescricao());
+			situacao2 = sit.get(0);
+		}
+		
+		
+		// noticia 1		
+		Noticia noticia = new Noticia("Titulo 01", "Noticia 01",
+				LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
+		noticia.setSituacao(situacao);
+		// verifica se existe a noticia
+		if (!this.noticiaService.isExists(noticia)) {
+			this.noticiaService.insert(noticia);			
+		}			
+	
+		// ## noticia 2
+		noticia = new Noticia("Titulo 02", "Noticia 02",
+				LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
+		noticia.setSituacao(situacao2);
+		// verifica se a noticia existe
+		if (!this.noticiaService.isExists(noticia)) {				
+			this.noticiaService.insert(noticia);			
 		}
 	}
 
 	@Test
+	@Order(1)
 	@DisplayName("Teste o findAll - Sucesso")
-	public void testFindAll_ok() {
+	void testFindAll_ok() {
 		List<Noticia> noticias = this.noticiaService.findAll();
 		assertTrue(!noticias.isEmpty());
 	}
 	
 	@Test
+	@Order(2)
 	@DisplayName("Teste o findById - Sucesso")
-	public void testFindById_ok() {
-		List<Noticia> noticias = this.noticiaService.findByDescricao("Noticia 01");
-		assertTrue(!noticias.isEmpty());
+	void testFindById_ok() {
+		Optional<Noticia> noticia = this.noticiaService.findById(2L);
+		assertTrue(noticia.isPresent());
 	}
-	
-	
+		
 	@Test
+	@Order(3)
 	@DisplayName("Teste o findByDescricao - Sucesso")
-	public void testFindByDescricao_ok() {
+	void testFindByDescricao_ok() {
 		List<Noticia> noticias = this.noticiaService.findByDescricao("Noticia 01");
 		assertTrue(!noticias.isEmpty());
 	}
 	
 	
 	@Test
+	@Order(4)
 	@DisplayName("Teste o findByTitulo - Sucesso")
-	public void testFindByTitulo_ok() {
+	void testFindByTitulo_ok() {
 		List<Noticia> noticias = this.noticiaService.findByTitulo("Titulo 01");
 		assertTrue(!noticias.isEmpty());
 	}
 	
 	@Test
+	@Order(5)
 	@DisplayName("Teste o findByTitulo - Falha")
-	public void testFindByTitulo_fail() {
+	void testFindByTitulo_fail() {
 		List<Noticia> noticias = this.noticiaService.findByTitulo("Titulo 09");
 		assertTrue(noticias.isEmpty());
 	}
 	
 	@Test
+	@Order(6)
 	@DisplayName("Teste o isExists(Titulo) - Sucesso")
-	public void testIsExistsTitulo_ok() {
+	void testIsExistsTitulo_ok() {
 		Noticia noticia = new Noticia("Titulo 01", "Noticia 09",
 				LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
 		assertTrue(this.noticiaService.isExists(noticia));
 	}
 	
 	@Test
+	@Order(7)
 	@DisplayName("Teste o isExists(Descricao) - Sucesso")
-	public void testIsExistsDescricao_ok() {
+	void testIsExistsDescricao_ok() {
 		Noticia noticia = new Noticia("Titulo 09", "Noticia 01",
 				LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
 		assertTrue(this.noticiaService.isExists(noticia));
 	}
 	
 	@Test
+	@Order(8)
 	@DisplayName("Teste o isExists - Falha")
-	public void testIsExists_fail() {
+	void testIsExists_fail() {
 		Noticia noticia = new Noticia("Titulo 09", "Noticia 09",
 				LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
 		assertFalse(this.noticiaService.isExists(noticia));
 	}
 	
 	@Test
+	@Order(9)
 	@DisplayName("Teste o insert - Sucesso")
-	public void testInsert_ok() {		
+	void testInsert_ok() {		
 		try {
 			Noticia noticia = new Noticia("Titulo 03", "Noticia 03",
 					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
@@ -142,8 +165,9 @@ public class NoticiaServiceTest {
 	}
 	
 	@Test
+	@Order(10)
 	@DisplayName("Teste o insert(Duplicidade) - Falha")
-	public void testInsertDuplicidade_fail() {		
+	void testInsertDuplicidade_fail() {		
 		try {
 			Noticia noticia = new Noticia("Titulo 01", "Noticia 01",
 					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
@@ -155,8 +179,9 @@ public class NoticiaServiceTest {
 	}
 	
 	@Test
+	@Order(11)
 	@DisplayName("Teste o insert(Sem Situacao) - Falha")
-	public void testInsertWithoutSituacao_fail() {		
+	void testInsertWithoutSituacao_fail() {		
 		try {
 			Noticia noticia = new Noticia("Titulo 01", "Noticia 01",
 					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
