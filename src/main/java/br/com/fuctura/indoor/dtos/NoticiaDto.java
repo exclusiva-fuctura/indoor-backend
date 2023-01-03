@@ -17,6 +17,7 @@ public class NoticiaDto {
 	private String fim;
 	private int duracaoSegundos;
 	private long situacao;
+	private String mensagem;
 	
 	public NoticiaDto(Noticia noticia) {
 		if (null != noticia) {			

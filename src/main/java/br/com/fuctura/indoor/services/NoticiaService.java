@@ -15,8 +15,11 @@ import br.com.fuctura.indoor.exceptions.NoticiaExistsException;
 import br.com.fuctura.indoor.exceptions.NoticiaNotFoundException;
 import br.com.fuctura.indoor.exceptions.RequiredParamException;
 import br.com.fuctura.indoor.exceptions.SituacaoEmptyException;
+import br.com.fuctura.indoor.exceptions.SituacaoNotExistsException;
 import br.com.fuctura.indoor.repositories.NoticiaRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class NoticiaService {
 	
@@ -77,9 +80,11 @@ public class NoticiaService {
 	 */
 	public void insert(Noticia noticia) throws NoticiaExistsException, SituacaoEmptyException {
 		if (this.isExists(noticia)) {
+			log.warn("[ALERTA] Noticia já existe");
 			throw new NoticiaExistsException("Noticia já existe");
 		}
 		if (null == noticia.getSituacao()) {
+			log.warn("[ALERTA] Nenhuma situacao informada");
 			throw new SituacaoEmptyException("Nenhuma situacao informada");
 		}
 		this.noticiaRepository.save(noticia);
@@ -123,11 +128,16 @@ public class NoticiaService {
 			   !this.findByDescricao(noticia.getDescricao()).isEmpty();
 	}
 	
-	public Noticia generateNoticia(NoticiaDto dto) throws RequiredParamException {
+	public Noticia generateNoticia(NoticiaDto dto) throws RequiredParamException, SituacaoNotExistsException {
 		
 		if (dto.getTitulo().isBlank() || dto.getTitulo().length() < 10) {
 			throw new RequiredParamException("Titulo inválido");
 		}			
+		
+		// verificar se a situacao inicial existe
+		if (!this.situacaoService.isExists("Aguardando Início")) {
+			throw new SituacaoNotExistsException("Situação inicial 'Aguardando Início' não existe.");
+		}
 		
 		return new Noticia(
 				dto.getTitulo(),

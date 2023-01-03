@@ -26,6 +26,7 @@ import br.com.fuctura.indoor.exceptions.NoticiaExistsException;
 import br.com.fuctura.indoor.exceptions.NoticiaNotFoundException;
 import br.com.fuctura.indoor.exceptions.RequiredParamException;
 import br.com.fuctura.indoor.exceptions.SituacaoEmptyException;
+import br.com.fuctura.indoor.exceptions.SituacaoNotExistsException;
 import br.com.fuctura.indoor.services.NoticiaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -95,12 +96,13 @@ public class NoticiaController {
 			this.noticiaService.insert(noticia);
 			
 			return ResponseEntity.status(HttpStatus.CREATED).body(noticia.toDto());
-		} catch (RequiredParamException | SituacaoEmptyException e) {			
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} catch (RequiredParamException | SituacaoEmptyException | SituacaoNotExistsException e) {
+			dto.setMensagem(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
 		} catch (NoticiaExistsException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} 
-		
+			dto.setMensagem(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(dto);	
+		}
 	}
 	
 	@ApiOperation(value = "Atualiza a noticia")
@@ -126,14 +128,16 @@ public class NoticiaController {
 			this.noticiaService.update(noticia);
 			
 			return ResponseEntity.status(HttpStatus.CREATED).body(noticia.toDto());
-		} catch (RequiredParamException | SituacaoEmptyException e) {			
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (NoticiaExistsException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (RequiredParamException | SituacaoEmptyException e) {	
+			dto.setMensagem(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
+		} catch (NoticiaExistsException | SituacaoNotExistsException e) {
+			dto.setMensagem(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(dto);
 		} catch (NoticiaNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} 
-		
+			dto.setMensagem(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dto);
+		}		
 	}
 	
 	@ApiOperation(value = "Remover a noticia")

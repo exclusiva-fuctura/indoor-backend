@@ -120,7 +120,16 @@ public class SituacaoService {
 	 * @return retorna verdadeiro ou falso
 	 */
 	public boolean isExists(Situacao situacao) {
-		List<Situacao> situacoes = this.findByDescricao(situacao.getDescricao());
+		return this.isExists(situacao.getDescricao());
+	}
+	
+	/**
+	 * Verifica se exite a Situacao com a uam descricao especifica
+	 * @param descricao
+	 * @return retorna verdadeiro ou falso
+	 */
+	public boolean isExists(String descricao) {
+		List<Situacao> situacoes = this.findByDescricao(descricao);
 		return !situacoes.isEmpty();
 	}
 	

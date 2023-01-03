@@ -191,4 +191,18 @@ class NoticiaServiceTest {
 			assertFalse(false);
 		}
 	}
+	
+	@Test
+	@Order(12)
+	@DisplayName("Teste o insert(Sem Situacao padrão) - Falha")
+	void testInsertWithoutDefaultSituacao_fail() {		
+		try {
+			Noticia noticia = new Noticia("Titulo 01", "Noticia 01",
+					LocalDateTime.now(), LocalDateTime.now().plusMinutes(60), 20);
+			this.noticiaService.insert(noticia);
+			assertNotNull(noticia.getId());
+		} catch (NoticiaExistsException | SituacaoEmptyException e) {
+			assertFalse(false);
+		}
+	}
 }
