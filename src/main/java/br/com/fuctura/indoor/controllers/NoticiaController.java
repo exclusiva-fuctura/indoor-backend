@@ -124,10 +124,11 @@ public class NoticiaController {
 		try {
 			this.noticiaService.checkNoticia(dto);
 			this.noticiaService.checkSituacao(dto.getSituacao());
-			noticia = this.noticiaService.generateNoticia(dto);
+			// converte o DTO em uma noticia
+			noticia = this.noticiaService.convertDtoToNoticia(dto);
 			this.noticiaService.update(noticia);
 			
-			return ResponseEntity.status(HttpStatus.CREATED).body(noticia.toDto());
+			return ResponseEntity.status(HttpStatus.OK).body(noticia.toDto());
 		} catch (RequiredParamException | SituacaoEmptyException e) {	
 			dto.setMensagem(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);

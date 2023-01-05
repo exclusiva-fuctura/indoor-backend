@@ -97,13 +97,21 @@ public class NoticiaService {
 	 * @throws TituloExistsException 
 	 */
 	public void update(Noticia noticia) throws NoticiaExistsException, NoticiaNotFoundException {
-		if (this.isExists(noticia)) {
-			throw new NoticiaExistsException("Noticia já existe");
-		}
 		Optional<Noticia> noticiaFound = this.findById(noticia.getId());
-		if (noticiaFound.isPresent()) {
+		if (noticiaFound.isEmpty()) {
 			throw new NoticiaNotFoundException("Noticia nao encontrada");
 		}
+		
+		// realizar as alterações
+		noticiaFound.get().setDescricao(noticia.getDescricao());
+		noticiaFound.get().setDuracao(noticia.getDuracao());
+		noticiaFound.get().setInicio(noticia.getInicio());
+		noticiaFound.get().setFim(noticia.getFim());
+		noticiaFound.get().setTitulo(noticia.getTitulo());
+		noticiaFound.get().setSituacao(noticia.getSituacao());
+		
+		noticia = noticiaFound.get();
+		
 		this.noticiaRepository.save(noticia);
 	}
 
@@ -146,6 +154,31 @@ public class NoticiaService {
 				LocalDateTime.parse(dto.getFim(), DateTimeFormatter.ISO_DATE_TIME),
 				dto.getDuracaoSegundos(),
 				this.getSituacao("Aguardando Início"));
+
+	}
+	
+	public Noticia convertDtoToNoticia(NoticiaDto dto) throws RequiredParamException, SituacaoNotExistsException {
+		
+		if (dto.getTitulo().isBlank() || dto.getTitulo().length() < 10) {
+			throw new RequiredParamException("Titulo inválido");
+		}	
+		
+		// verificar se a situacao inicial existe
+		Optional<Situacao> situacao = this.situacaoService.findById(dto.getSituacao());
+		if (situacao.isEmpty()) {
+			throw new SituacaoNotExistsException("Situação informada não existe.");	
+		}
+		
+		Noticia noticia = new Noticia(
+				dto.getTitulo(),
+				dto.getDescricao(),
+				LocalDateTime.parse(dto.getInicio(), DateTimeFormatter.ISO_DATE_TIME),
+				LocalDateTime.parse(dto.getFim(), DateTimeFormatter.ISO_DATE_TIME),
+				dto.getDuracaoSegundos(),
+				situacao.get());
+		noticia.setId(dto.getNumero());
+		
+		return noticia;
 
 	}
 	
