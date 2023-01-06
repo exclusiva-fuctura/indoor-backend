@@ -28,6 +28,7 @@ import br.com.fuctura.indoor.exceptions.RequiredParamException;
 import br.com.fuctura.indoor.exceptions.SituacaoEmptyException;
 import br.com.fuctura.indoor.exceptions.SituacaoNotExistsException;
 import br.com.fuctura.indoor.services.NoticiaService;
+import br.com.fuctura.indoor.utils.NumberUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -67,9 +68,13 @@ public class NoticiaController {
 	})
 	@GetMapping(value="/{id}" ,produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<NoticiaDto> show(
-			@PathVariable @ApiParam(value = "Id da noticia", required=true) Long id) {
+			@PathVariable @ApiParam(value = "Id da noticia", required=true, defaultValue = "0") String id) {
 		
-		Optional<Noticia> noticia = this.noticiaService.findById(id);
+		if (!NumberUtils.isNumeric(id) || id == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		Optional<Noticia> noticia = this.noticiaService.findById(Long.parseLong(id));
 		
 		if (noticia.isPresent()) {			
 			return ResponseEntity.status(HttpStatus.OK).body(noticia.get().toDto());
@@ -114,11 +119,11 @@ public class NoticiaController {
 	@PutMapping(value="/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<NoticiaDto> update(
 			@RequestBody @ApiParam(value = "Objeto a ser atualizado", required=true) NoticiaDto dto,
-			@PathVariable @ApiParam(value = "Id da noticia", required=true) Long id ) {
+			@PathVariable @ApiParam(value = "Id da noticia", required=true, defaultValue = "0") String id ) {
 				
-		if (null == id || dto.getNumero() != id) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
-		}
+		if (!NumberUtils.isNumeric(id) || id == null || dto.getNumero() != Long.parseLong(id)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}		
 
 		Noticia noticia;
 		try {
@@ -148,13 +153,13 @@ public class NoticiaController {
 	})
 	@DeleteMapping(value="/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<NoticiaDto> delete(			
-			@PathVariable @ApiParam(value = "Id da noticia", required=true) Long id ) {
+			@PathVariable @ApiParam(value = "Id da noticia", required=true, defaultValue = "0") String id ) {
 				
-		if (null == id) {
+		if (!NumberUtils.isNumeric(id) || id == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-
-		this.noticiaService.delete(id);
+		
+		this.noticiaService.delete(Long.parseLong(id));
 		
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); 
 		

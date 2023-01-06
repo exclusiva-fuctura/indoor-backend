@@ -25,6 +25,7 @@ import br.com.fuctura.indoor.entities.Situacao;
 import br.com.fuctura.indoor.exceptions.FoundChildException;
 import br.com.fuctura.indoor.exceptions.SituacaoExistsException;
 import br.com.fuctura.indoor.services.SituacaoService;
+import br.com.fuctura.indoor.utils.NumberUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -60,12 +61,18 @@ public class SituacaoController {
 	@ApiOperation(value = "Recupera uma situação baseada no id")
 	@ApiResponses(value = {
 	    @ApiResponse(code = 200, message = "Solicitação atendida com sucesso"),
+	    @ApiResponse(code = 400, message = "Erro nos parametros da requisição"),
 	    @ApiResponse(code = 404, message = "Situação não encontrada"),	
 	})	
 	@GetMapping(value="/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<SituacaoDto> show(
-			@PathVariable @ApiParam(value = "Id da situação", required=true) Long id) {
-		Optional<Situacao> situacao = this.situacaoService.findById(id); 
+			@PathVariable @ApiParam(value = "Id da situação", required=true, defaultValue = "0") String id) {
+		
+		if (!NumberUtils.isNumeric(id) || id == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		Optional<Situacao> situacao = this.situacaoService.findById(Long.parseLong(id)); 
 		
 		if(situacao.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(situacao.get().toDto());
@@ -119,15 +126,20 @@ public class SituacaoController {
 	})	
 	@PutMapping(value="/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<SituacaoDto> update(			
-		@PathVariable @ApiParam(value = "Id da situação", required=true) Long id,
+		@PathVariable @ApiParam(value = "Id da situação", required=true, defaultValue = "0") String id,
 		@RequestBody @ApiParam(value = "Situação com a alteração", required=true) SituacaoDto dto) {
-		Optional<Situacao> situacao = this.situacaoService.findById(id); 
+		
+		if (!NumberUtils.isNumeric(id) || id == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		Optional<Situacao> situacao = this.situacaoService.findById(Long.parseLong(id)); 
 
 		if (null == dto.getDescricao() || dto.getDescricao().isBlank()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
-		if (id != dto.getId()) {
+		if (Long.parseLong(id) != dto.getId()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();	
 		}
 		
@@ -156,13 +168,13 @@ public class SituacaoController {
 	})	
 	@DeleteMapping(value="/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<SituacaoDto> delete(			
-		@PathVariable @ApiParam(value = "Id da situação", required=true) Long id) {
+		@PathVariable @ApiParam(value = "Id da situação", required=true, defaultValue = "0") String id) {
 
-		if (null == id) {
+		if (!NumberUtils.isNumeric(id) || id == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
-		Optional<Situacao> situacao = this.situacaoService.findById(id); 
+		Optional<Situacao> situacao = this.situacaoService.findById(Long.parseLong(id)); 
 
 		if(situacao.isPresent()) {
 			// remove a situacao
