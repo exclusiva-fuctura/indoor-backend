@@ -48,7 +48,7 @@ class NoticiaRepositoryTest {
 	@Order(1)
     @DisplayName("Testar o findBySituação - Sucesso")
 	void testFindBySituacao_ok() {
-		Optional<Situacao> situacao = this.situacaoRepository.findById(1L);
+		Optional<Situacao> situacao = this.situacaoRepository.findById(4L);
 		if (situacao.isPresent()) {
 			List<Noticia> lista = this.noticiaRepository.findBySituacao(situacao.get());
 			
@@ -62,10 +62,10 @@ class NoticiaRepositoryTest {
 	@Order(2)
     @DisplayName("Testar o findBySituação - Falha")	
 	void testFindBySituacao_fail() {
-		Optional<Situacao> situacao = this.situacaoRepository.findById(1L);
+		Optional<Situacao> situacao = this.situacaoRepository.findById(4L);
 		if (situacao.isPresent()) {
 			// alterar o id da situacao
-			situacao.get().setId(2L);
+			situacao.get().setId(5L);
 
 			List<Noticia> lista = this.noticiaRepository.findBySituacao(situacao.get());
 			
@@ -79,7 +79,7 @@ class NoticiaRepositoryTest {
 	@Order(3)
     @DisplayName("Testar a findSituacaoId - Sucesso")
 	void testFindSituacaoId_ok() {
-		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(1L);
+		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(4L);
 		assertTrue(!noticias.isEmpty());
 	}
 	
@@ -87,7 +87,7 @@ class NoticiaRepositoryTest {
 	@Order(4)
     @DisplayName("Testar a findSituacaoId - Falha")
 	void testFindSituacaoId_fail() {
-		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(2L);
+		List<Noticia> noticias = this.noticiaRepository.findSituacaoId(5L);
 		assertTrue(noticias.isEmpty());
 	}
 	
@@ -157,11 +157,11 @@ class NoticiaRepositoryTest {
 	@Order(10)
     @DisplayName("Testar o Delete - Sucesso")
 	void testDelete_ok() {
-		Optional<Noticia> noticia = this.noticiaRepository.findById(1L);
+		Optional<Noticia> noticia = this.noticiaRepository.findById(4L);
 		if (noticia.isPresent()) {
 			this.noticiaRepository.delete(noticia.get());
 			
-			Optional<Noticia> noticiaFound = this.noticiaRepository.findById(1L);
+			Optional<Noticia> noticiaFound = this.noticiaRepository.findById(4L);
 			assertTrue(noticiaFound.isEmpty());
 		} else {
 			assertTrue(false);
@@ -172,7 +172,7 @@ class NoticiaRepositoryTest {
 	@Order(11)
     @DisplayName("Testar a Atualizacao - Sucesso")
 	void testUpdate_ok() {
-		Optional<Noticia> noticia = this.noticiaRepository.findById(2L);
+		Optional<Noticia> noticia = this.noticiaRepository.findById(5L);
 		if (noticia.isPresent()) {
 			String descricaoOriginal = noticia.get().getDescricao();
 			// alterar a noticia
